@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.960
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flood_Control", "Flood Control\Flood_Control\Flood_Control.csproj", "{09E40C69-5B4C-439A-B294-1979B30723FD}"
+EndProject
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "Flood_ControlContent", "Flood Control\Flood_ControlContent\Flood_ControlContent.contentproj", "{76EC49E6-E32F-415E-BE83-1C44F3F1381F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{09E40C69-5B4C-439A-B294-1979B30723FD}.Debug|x86.ActiveCfg = Debug|x86
+		{09E40C69-5B4C-439A-B294-1979B30723FD}.Debug|x86.Build.0 = Debug|x86
+		{09E40C69-5B4C-439A-B294-1979B30723FD}.Release|x86.ActiveCfg = Release|x86
+		{09E40C69-5B4C-439A-B294-1979B30723FD}.Release|x86.Build.0 = Release|x86
+		{76EC49E6-E32F-415E-BE83-1C44F3F1381F}.Debug|x86.ActiveCfg = Debug|x86
+		{76EC49E6-E32F-415E-BE83-1C44F3F1381F}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {39CF065B-9FD9-4B06-B695-9E15C5D8B43F}
+	EndGlobalSection
+EndGlobal
