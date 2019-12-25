@@ -69,7 +69,8 @@ namespace Flood_Control
         }
         public void RemoveSuffix(string suffix)
         {
-            pieceSuffix = pieceSuffix.Replace(pieceSuffix, "");
+            if (pieceSuffix != "")
+                pieceSuffix = pieceSuffix.Replace(pieceSuffix, "");
         }
 
         public void RotatePiece(bool Clockwise)
