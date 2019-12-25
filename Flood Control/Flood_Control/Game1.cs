@@ -179,6 +179,7 @@ namespace Flood_Control
 
             foreach(Vector2 ScoringSquare in WaterChain)
             {
+                gameBoard.AddFadingPiece((int)ScoringSquare.X, (int)ScoringSquare.Y, gameBoard.GetSquare((int)ScoringSquare.X, (int)ScoringSquare.Y));
                 gameBoard.SetSquare((int)ScoringSquare.X, (int)ScoringSquare.Y, "Empty");
             }
         }
