@@ -66,6 +66,7 @@ namespace Flood_Control
                 {
                     SetSquare(x, y, GetSquare(x, rowLookup));
                     SetSquare(x, rowLookup, "Empty");
+                    AddFallingPiece(x, y, GetSquare(x, y), GamePiece.PieceHeight * (y - rowLookup));
                     break;
                 }
                 --rowLookup;
@@ -84,7 +85,10 @@ namespace Flood_Control
             for (int y = 0; y < GameBoardHeight; ++y)
                 for (int x = 0; x < GameBoardWidth; ++x)
                     if (GetSquare(x, y) == "Empty")
+                    {
+                        AddFallingPiece(x, y, GetSquare(x, y), GamePiece.PieceHeight * GameBoardHeight);
                         RandomPiece(x, y);
+                    }
         }
 
         public void ResetWater()

@@ -107,18 +107,26 @@ namespace Flood_Control
                     break;
                 case GameStates.Playing:
                     timeSinceLastInput += (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    if (timeSinceLastInput >= MinTimeSinceLastInput)
-                    {
-                        HandleMouseInput(Mouse.GetState());
-                    }
 
-                    gameBoard.ResetWater();
-                    for (int y=0;y<GameBoard.GameBoardHeight;++y)
+                    if (gameBoard.ArePiecesAnimating())
                     {
-                        CheckScoringChain(gameBoard.GetWaterChain(y));
+                        gameBoard.UpdateAnimatedPieces();
                     }
+                    else
+                    {
+                        gameBoard.ResetWater();
+                        for (int y=0;y<GameBoard.GameBoardHeight;++y)
+                        {
+                            CheckScoringChain(gameBoard.GetWaterChain(y));
+                        }
 
-                    gameBoard.GenerateNewPieces(true);
+                        gameBoard.GenerateNewPieces(true);
+
+                        if (timeSinceLastInput >= MinTimeSinceLastInput)
+                        {
+                            HandleMouseInput(Mouse.GetState());
+                        }
+                    }
                     break;
             }
 
@@ -192,14 +200,40 @@ namespace Flood_Control
                 return;
             if (mouseState.LeftButton == ButtonState.Pressed)
             {
+                gameBoard.AddRotatingPiece(x, y, gameBoard.GetSquare(x, y), false);
                 gameBoard.RotatePiece(x, y, false);
                 timeSinceLastInput = 0.0f;
             }
             if (mouseState.RightButton == ButtonState.Pressed)
             {
+                gameBoard.AddRotatingPiece(x, y, gameBoard.GetSquare(x, y), true);
                 gameBoard.RotatePiece(x, y, true);
                 timeSinceLastInput = 0.0f;
             }
+        }
+        private void DrawEmptyPiece(int x, int y,int pixelX, int pixelY)
+        {
+            spriteBatch.Draw(playingPieces, new Rectangle(pixelX, pixelY, GamePiece.PieceWidth, GamePiece.PieceHeight), EmptyPiece, Color.White);
+        }
+        private void DrawStandardPiece(int pixelX, int pixelY,string positionName)
+        {
+            spriteBatch.Draw(playingPieces, new Rectangle(pixelX, pixelY, GamePiece.PieceWidth, GamePiece.PieceHeight), gameBoard.GetSourceRect(x,y), Color.White);
+        }
+        private void DrawFallingPiece(int pixelX,int pixelY,string positionName)
+        {
+            spriteBatch.Draw(playingPieces, new Rectangle(pixelX, pixelY-
+                gameBoard.fallingPieces[positionName].VerticalOffset, GamePiece.PieceWidth, GamePiece.PieceHeight), gameBoard.fallingPieces[positionName].GetSourceRect(), Color.White);
+        }
+        private void DrawFadingPiece(int pixelX, int pixelY,string positionName)
+        {
+            spriteBatch.Draw(playingPieces, new Rectangle(pixelX, pixelY, GamePiece.PieceWidth, GamePiece.PieceHeight),
+                gameBoard.fadingPieces[positionName].GetSourceRect(), Color.White * gameBoard.fadingPieces[positionName].alphaLevel);
+        }
+        private void DrawRotatingPiece(int pixelX, int pixelY, string positionName)
+        {
+            spriteBatch.Draw(playingPieces, new Rectangle(pixelX + GamePiece.PieceWidth / 2, pixelY + GamePiece.PieceHeight / 2, GamePiece.PieceWidth, GamePiece.PieceHeight),
+                gameBoard.rotatingPieces[positionName].GetSourceRect(), Color.White, gameBoard.rotatingPieces[positionName].RotationAmount,
+                new Vector2(GamePiece.PieceWidth / 2, GamePiece.PieceHeight / 2), SpriteEffects.None, 0.0f);
         }
     }
 }
