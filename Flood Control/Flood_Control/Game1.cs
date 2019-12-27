@@ -184,9 +184,6 @@ namespace Flood_Control
 
                         if (!pieceDrawn)
                             DrawStandardPiece(x, y, pixelX, pixelY);
-
-                        spriteBatch.Draw(playingPieces, new Rectangle(pixelX, pixelY, GamePiece.PieceWidth, GamePiece.PieceHeight), EmptyPiece,Color.White);
-                        spriteBatch.Draw(playingPieces, new Rectangle(pixelX, pixelY, GamePiece.PieceWidth, GamePiece.PieceHeight), gameBoard.GetSourceRect(x, y), Color.White);
                     }
                 this.Window.Title = playerScore.ToString();
 
