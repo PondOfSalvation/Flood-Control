@@ -22,6 +22,8 @@ namespace Flood_Control
         Texture2D backgroundScreen;
         Texture2D titleScreen;
 
+        SpriteFont pericles36Font;
+
         GameBoard gameBoard;
         Vector2 gameBoardDisplayOrigin = new Vector2(70, 89);
         int playerScore = 0;
@@ -71,6 +73,7 @@ namespace Flood_Control
             playingPieces = Content.Load<Texture2D>(@"Textures\Tile_Sheet");
             backgroundScreen = Content.Load<Texture2D>(@"Textures\Background");
             titleScreen = Content.Load<Texture2D>(@"Textures\TitleScreen");
+            pericles36Font = Content.Load<SpriteFont>(@"Fonts\Pericles36");
         }
 
         /// <summary>
