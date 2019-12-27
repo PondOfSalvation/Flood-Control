@@ -158,6 +158,30 @@ namespace Flood_Control
                     {
                         int pixelX = (int)gameBoardDisplayOrigin.X + (x * GamePiece.PieceWidth);
                         int pixelY = (int)gameBoardDisplayOrigin.Y + (y * GamePiece.PieceHeight);
+
+                        DrawEmptyPiece(pixelX, pixelY);
+                        bool pieceDrawn = false;
+                        string positionName = x.ToString() + "_" + y.ToString();
+
+                        if (gameBoard.rotatingPieces.ContainsKey(positionName))
+                        {
+                            DrawRotatingPiece(pixelX, pixelY, positionName);
+                            pieceDrawn = true;
+                        }
+                        if (gameBoard.fadingPieces.ContainsKey(positionName))
+                        {
+                            DrawFadingPiece(pixelX, pixelY, positionName);
+                            pieceDrawn = true;
+                        }
+                        if (gameBoard.fallingPieces.ContainsKey(positionName))
+                        {
+                            DrawFallingPiece(pixelX, pixelY, positionName);
+                            pieceDrawn = true;
+                        }
+
+                        if (!pieceDrawn)
+                            DrawStandardPiece(x, y, pixelX, pixelY);
+
                         spriteBatch.Draw(playingPieces, new Rectangle(pixelX, pixelY, GamePiece.PieceWidth, GamePiece.PieceHeight), EmptyPiece,Color.White);
                         spriteBatch.Draw(playingPieces, new Rectangle(pixelX, pixelY, GamePiece.PieceWidth, GamePiece.PieceHeight), gameBoard.GetSourceRect(x, y), Color.White);
                     }
@@ -211,11 +235,11 @@ namespace Flood_Control
                 timeSinceLastInput = 0.0f;
             }
         }
-        private void DrawEmptyPiece(int x, int y,int pixelX, int pixelY)
+        private void DrawEmptyPiece(int pixelX, int pixelY)
         {
             spriteBatch.Draw(playingPieces, new Rectangle(pixelX, pixelY, GamePiece.PieceWidth, GamePiece.PieceHeight), EmptyPiece, Color.White);
         }
-        private void DrawStandardPiece(int pixelX, int pixelY,string positionName)
+        private void DrawStandardPiece(int x, int y, int pixelX, int pixelY)
         {
             spriteBatch.Draw(playingPieces, new Rectangle(pixelX, pixelY, GamePiece.PieceWidth, GamePiece.PieceHeight), gameBoard.GetSourceRect(x,y), Color.White);
         }
