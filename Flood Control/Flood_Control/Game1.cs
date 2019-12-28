@@ -26,12 +26,14 @@ namespace Flood_Control
 
         GameBoard gameBoard;
         Vector2 gameBoardDisplayOrigin = new Vector2(70, 89);
+        Vector2 scorePosition = new Vector2(605, 215);
         int playerScore = 0;
 
         enum GameStates { TitleScreen, Playing };
         GameStates gameState = GameStates.TitleScreen;
 
         Rectangle EmptyPiece = new Rectangle(1, 247, 40, 40);
+        Queue<ScoreZoom> ScoreZooms = new Queue<ScoreZoom>();
 
         const float MinTimeSinceLastInput = 0.25f;
         float timeSinceLastInput = 0.0f;
@@ -130,6 +132,9 @@ namespace Flood_Control
                             HandleMouseInput(Mouse.GetState());
                         }
                     }
+
+                    UpdateScoreZooms();
+
                     break;
             }
 
@@ -185,7 +190,14 @@ namespace Flood_Control
                         if (!pieceDrawn)
                             DrawStandardPiece(x, y, pixelX, pixelY);
                     }
-                this.Window.Title = playerScore.ToString();
+
+                foreach(ScoreZoom zoom in ScoreZooms)
+                {
+                    spriteBatch.DrawString(pericles36Font, zoom.Text, new Vector2(this.Window.ClientBounds.Width / 2, this.Window.ClientBounds.Height / 2),
+                        zoom.DrawColor,0f,new Vector2(pericles36Font.MeasureString(zoom.Text).X/2,pericles36Font.MeasureString(zoom.Text).Y/2),zoom.Scale,SpriteEffects.None,0f);
+                }
+
+                spriteBatch.DrawString(pericles36Font, playerScore.ToString(), scorePosition, Color.Black);
 
                 spriteBatch.End();
             }
@@ -214,6 +226,8 @@ namespace Flood_Control
                 gameBoard.AddFadingPiece((int)ScoringSquare.X, (int)ScoringSquare.Y, gameBoard.GetSquare((int)ScoringSquare.X, (int)ScoringSquare.Y));
                 gameBoard.SetSquare((int)ScoringSquare.X, (int)ScoringSquare.Y, "Empty");
             }
+
+            ScoreZooms.Enqueue(new ScoreZoom("+" + DetermineScore(WaterChain.Count).ToString(), new Color(1f, 0f, 0f, 0.4f)));
         }
         private void HandleMouseInput(MouseState mouseState)
         {
@@ -258,6 +272,19 @@ namespace Flood_Control
             spriteBatch.Draw(playingPieces, new Rectangle(pixelX + GamePiece.PieceWidth / 2, pixelY + GamePiece.PieceHeight / 2, GamePiece.PieceWidth, GamePiece.PieceHeight),
                 gameBoard.rotatingPieces[positionName].GetSourceRect(), Color.White, gameBoard.rotatingPieces[positionName].RotationAmount,
                 new Vector2(GamePiece.PieceWidth / 2, GamePiece.PieceHeight / 2), SpriteEffects.None, 0.0f);
+        }
+
+        private void UpdateScoreZooms()
+        {
+            int dequeueCounter = 0;
+            foreach(ScoreZoom zoom in ScoreZooms)
+            {
+                zoom.Update();
+                if (zoom.IsCompleted)
+                    ++dequeueCounter;
+            }
+            for (int d = 0; d < dequeueCounter; ++d)
+                ScoreZooms.Dequeue();
         }
     }
 }
