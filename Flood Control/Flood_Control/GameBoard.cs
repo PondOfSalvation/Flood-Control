@@ -86,8 +86,8 @@ namespace Flood_Control
                 for (int x = 0; x < GameBoardWidth; ++x)
                     if (GetSquare(x, y) == "Empty")
                     {
-                        AddFallingPiece(x, y, GetSquare(x, y), GamePiece.PieceHeight * GameBoardHeight);
                         RandomPiece(x, y);
+                        AddFallingPiece(x, y, GetSquare(x, y), GamePiece.PieceHeight * GameBoardHeight);
                     }
         }
 
