@@ -21,15 +21,28 @@ namespace Flood_Control
         Texture2D playingPieces;
         Texture2D backgroundScreen;
         Texture2D titleScreen;
-
         SpriteFont pericles36Font;
 
         GameBoard gameBoard;
+
         Vector2 gameBoardDisplayOrigin = new Vector2(70, 89);
         Vector2 scorePosition = new Vector2(605, 215);
-        int playerScore = 0;
+        Vector2 gameOverLocation = new Vector2(200, 260);
+        float gameOverTimer;
 
-        enum GameStates { TitleScreen, Playing };
+        int playerScore = 0;
+        const float MaxFloodCounter = 100.0f;
+        float floodCount = 0.0f;
+        float timeSinceLastFloodIncrease = 0.0f;
+        float timeBetweenFloodIncreases = 1.0f;
+        float floodIncreaseAmount = 0.5f;
+
+        const int MaxWaterHeight = 244;
+        const int WaterWidth = 297;
+        Vector2 waterOverlayStart = new Vector2(85, 245);
+        Vector2 waterPosition = new Vector2(478, 338);
+
+        enum GameStates { TitleScreen, Playing, GameOver };
         GameStates gameState = GameStates.TitleScreen;
 
         Rectangle EmptyPiece = new Rectangle(1, 247, 40, 40);
@@ -113,6 +126,18 @@ namespace Flood_Control
                 case GameStates.Playing:
                     timeSinceLastInput += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+                    timeSinceLastFloodIncrease += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    if (timeSinceLastFloodIncrease>=timeBetweenFloodIncreases)
+                    {
+                        floodCount += floodIncreaseAmount;
+                        timeSinceLastFloodIncrease = 0.0f;
+                        if (floodCount>=MaxFloodCounter)
+                        {
+                            gameOverTimer = 8.0f;
+                            gameState = GameStates.GameOver;
+                        }
+                    }
+
                     if (gameBoard.ArePiecesAnimating())
                     {
                         gameBoard.UpdateAnimatedPieces();
@@ -136,6 +161,12 @@ namespace Flood_Control
                     UpdateScoreZooms();
 
                     break;
+                case GameStates.GameOver:
+                    gameOverTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    if (gameOverTimer <= 0)
+                        gameState = GameStates.TitleScreen;
+
+                    break;
             }
 
             base.Update(gameTime);
@@ -156,7 +187,7 @@ namespace Flood_Control
                 spriteBatch.Draw(titleScreen, new Rectangle(0, 0, this.Window.ClientBounds.Width, this.Window.ClientBounds.Height), Color.White);
                 spriteBatch.End();
             }
-            else if (gameState == GameStates.Playing)
+            else if ((gameState == GameStates.Playing) || (gameState == GameStates.GameOver))
             {
                 spriteBatch.Begin();
 
@@ -197,8 +228,18 @@ namespace Flood_Control
                         zoom.DrawColor,0f,new Vector2(pericles36Font.MeasureString(zoom.Text).X/2,pericles36Font.MeasureString(zoom.Text).Y/2),zoom.Scale,SpriteEffects.None,0f);
                 }
 
+                int waterHeight = (int)(MaxWaterHeight * (floodCount / 100));
+                spriteBatch.Draw(backgroundScreen,new Rectangle((int)waterPosition.X, (int)waterPosition.Y + MaxWaterHeight - waterHeight, WaterWidth, waterHeight),
+                    new Rectangle((int)waterOverlayStart.X, (int)waterOverlayStart.Y+MaxWaterHeight-waterHeight,WaterWidth,waterHeight),new Color(255,255,255,180));
                 spriteBatch.DrawString(pericles36Font, playerScore.ToString(), scorePosition, Color.Black);
 
+                spriteBatch.End();
+            }
+
+            if (gameState==GameStates.GameOver)
+            {
+                spriteBatch.Begin();
+                spriteBatch.DrawString(pericles36Font, "G A M E O V E R!", gameOverLocation, Color.Yellow);
                 spriteBatch.End();
             }
 
@@ -220,6 +261,7 @@ namespace Flood_Control
                 return;
 
             playerScore += DetermineScore(WaterChain.Count);
+            floodCount = MathHelper.Clamp(floodCount - (DetermineScore(WaterChain.Count) / 10), 0f, 100f);
 
             foreach(Vector2 ScoringSquare in WaterChain)
             {
