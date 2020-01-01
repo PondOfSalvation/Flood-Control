@@ -5,7 +5,11 @@ VisualStudioVersion = 15.0.28307.960
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flood_Control", "Flood Control\Flood_Control\Flood_Control.csproj", "{09E40C69-5B4C-439A-B294-1979B30723FD}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "Flood_ControlContent", "Flood Control\Flood_ControlContent\Flood_ControlContent.contentproj", "{76EC49E6-E32F-415E-BE83-1C44F3F1381F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flood_ControlContent", "Flood Control\Flood_ControlContent\Flood_ControlContent.contentproj", "{76EC49E6-E32F-415E-BE83-1C44F3F1381F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flood_Control_Reimplement", "Flood_Control_Reimplement\Flood_Control_Reimplement\Flood_Control_Reimplement.csproj", "{D50AFB44-358F-4E9B-8B9F-1F780F2D3C5B}"
+EndProject
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "Flood_Control_ReimplementContent", "Flood_Control_Reimplement\Flood_Control_ReimplementContent\Flood_Control_ReimplementContent.contentproj", "{1030FD13-ADFA-43A8-8FDD-B1EC14074036}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,6 +23,12 @@ Global
 		{09E40C69-5B4C-439A-B294-1979B30723FD}.Release|x86.Build.0 = Release|x86
 		{76EC49E6-E32F-415E-BE83-1C44F3F1381F}.Debug|x86.ActiveCfg = Debug|x86
 		{76EC49E6-E32F-415E-BE83-1C44F3F1381F}.Release|x86.ActiveCfg = Release|x86
+		{D50AFB44-358F-4E9B-8B9F-1F780F2D3C5B}.Debug|x86.ActiveCfg = Debug|x86
+		{D50AFB44-358F-4E9B-8B9F-1F780F2D3C5B}.Debug|x86.Build.0 = Debug|x86
+		{D50AFB44-358F-4E9B-8B9F-1F780F2D3C5B}.Release|x86.ActiveCfg = Release|x86
+		{D50AFB44-358F-4E9B-8B9F-1F780F2D3C5B}.Release|x86.Build.0 = Release|x86
+		{1030FD13-ADFA-43A8-8FDD-B1EC14074036}.Debug|x86.ActiveCfg = Debug|x86
+		{1030FD13-ADFA-43A8-8FDD-B1EC14074036}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
