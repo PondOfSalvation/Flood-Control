@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 
 namespace Flood_Control_Reimplement
 {
@@ -9,8 +10,17 @@ namespace Flood_Control_Reimplement
     {
         const int gameBoardWidth = 8;
         const int gameBoardHeight = 10;
-
+        
         readonly Random rng = new Random();
+        
+        Dictionary<Point, RotatingPiece> rotatingPieces = new Dictionary<Point, RotatingPiece>();
+        Dictionary<Point, FadingPiece> fadingPieces = new Dictionary<Point, FadingPiece>();
+        Dictionary<Point, FallingPiece> fallingPieces = new Dictionary<Point, FallingPiece>();
+        
+        bool IsAnimating
+        {
+            get { return (rotatingPieces.Count > 0) || (fadingPieces.Count > 0) || (fallingPieces.Count > 0);}
+        }
 
         GamePiece[,] board = new GamePiece[gameBoardHeight, gameBoardWidth];
 
@@ -60,52 +70,63 @@ namespace Flood_Control_Reimplement
                 }
         }
 
-        private void PropagateWater(int y, int x)
+        // Returns true if the score condition is met
+        private bool PropagateWater(int y, int x)
         {
+            bool hasConnected = false;
+            
             if (y < 0 || x < 0 || y >= gameBoardHeight)
-                return;
+                return false;
             if (x >= gameBoardWidth)
             {
-                RemoveConnected(y, x - 1);
-                return;
+                AddFadingPiece(y, x);
+                return (hasConnected = true);
             }
             if (board[y, x].WaterFilled)
-                return;
+                return false;
 
             board[y, x].WaterFilled = true;
 
+       
             switch(board[y,x].Type)
             {
                 case GamePiece.PieceType.LR:
-                    PropagateWater(y, x - 1);
-                    PropagateWater(y, x + 1);
+                    hasConnected = hasConnected || PropagateWater(y, x - 1);
+                    hasConnected = hasConnected || PropagateWater(y, x + 1);
                     break;
                 case GamePiece.PieceType.UD:
-                    PropagateWater(y - 1, x);
-                    PropagateWater(y + 1, x);
+                    hasConnected = hasConnected || PropagateWater(y - 1, x);
+                    hasConnected = hasConnected || PropagateWater(y + 1, x);
                     break;
                 case GamePiece.PieceType.UL:
-                    PropagateWater(y - 1, x);
-                    PropagateWater(y, x - 1);
+                    hasConnected = hasConnected || PropagateWater(y - 1, x);
+                    hasConnected = hasConnected || PropagateWater(y, x - 1);
                     break;
                 case GamePiece.PieceType.UR:
-                    PropagateWater(y - 1, x);
-                    PropagateWater(y, x + 1);
+                    hasConnected = hasConnected || PropagateWater(y - 1, x);
+                    hasConnected = hasConnected || PropagateWater(y, x + 1);
                     break;
                 case GamePiece.PieceType.DL:
-                    PropagateWater(y + 1, x);
-                    PropagateWater(y, x - 1);
+                    hasConnected = hasConnected || PropagateWater(y + 1, x);
+                    hasConnected = hasConnected || PropagateWater(y, x - 1);
                     break;
                 case GamePiece.PieceType.DR:
-                    PropagateWater(y + 1, x);
-                    PropagateWater(y, x + 1);
+                    hasConnected = hasConnected || PropagateWater(y + 1, x);
+                    hasConnected = hasConnected || PropagateWater(y, x + 1);
                     break;
             }
-        }
-
-        private void RemoveConnected(int y, int x)
-        {
             
+            if (hasConnected)
+            {
+                AddFadingPiece(y, x);
+            }
+            
+            return hasConnected;
+        }
+        
+        private void AddFadingPiece(int y, int x)
+        {
+            fadingPieces[new Point(x, y)] = new FadingPiece(board[y,x].Type);
         }
 
         #endregion

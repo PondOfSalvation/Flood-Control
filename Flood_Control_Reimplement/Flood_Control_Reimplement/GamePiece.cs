@@ -38,7 +38,7 @@ namespace Flood_Control_Reimplement
         #endregion
 
 
-        public Rectangle SpriteRectangle
+        public virtual Rectangle SpriteRectangle
         {
             get
             {
