@@ -29,7 +29,7 @@ namespace Flood_Control_Reimplement
             board[y, x].Rotate(clockwise);
             ClearWater();
             for (int i = 0; i < gameBoardHeight; ++i)
-                switch(board[y,x].Type)
+                switch(board[i,0].Type)
                 {
                     case GamePiece.PieceType.LR:
                     case GamePiece.PieceType.UL:
@@ -105,7 +105,7 @@ namespace Flood_Control_Reimplement
 
         private void RemoveConnected(int y, int x)
         {
-
+            
         }
 
         #endregion
