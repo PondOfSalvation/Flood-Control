@@ -39,10 +39,9 @@ namespace Flood_Control_Reimplement
 
         GameBoard gameBoard;
 
-        bool isGameOver;
         int gameScore;
 
-        enum GameState { TitleScreen, Playing, Pause }
+        enum GameState { TitleScreen, Playing, GameOver }
         GameState gameState = GameState.TitleScreen;
 
         #endregion
@@ -62,7 +61,6 @@ namespace Flood_Control_Reimplement
 
         private void ResetGame()
         {
-            isGameOver = false;
             gameScore = 0;
             if (gameBoard == null)
                 gameBoard = new GameBoard();
