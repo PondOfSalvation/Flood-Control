@@ -13,13 +13,17 @@ namespace Flood_Control_Reimplement
         
         readonly Random rng = new Random();
         
-        Dictionary<Point, RotatingPiece> rotatingPieces = new Dictionary<Point, RotatingPiece>();
-        Dictionary<Point, FadingPiece> fadingPieces = new Dictionary<Point, FadingPiece>();
-        Dictionary<Point, FallingPiece> fallingPieces = new Dictionary<Point, FallingPiece>();
+        public enum AnimationType { Rotate, Fade, Fall }
         
+        int rotatingPiecesCount = 0;
+        int fadingPiecesCount = 0;
+        int fallingPiecesCount = 0;
+        
+        Dictionary<Point, IAnimatedPiece> animatingPieces = new Dictionary<Point, IAnimatedPiece>();
+
         bool IsAnimating
         {
-            get { return (rotatingPieces.Count > 0) || (fadingPieces.Count > 0) || (fallingPieces.Count > 0);}
+            get { return (rotatingPiecesCount > 0) || (fadingPiecesCount > 0) || (fallingPiecesCount > 0);}
         }
 
         GamePiece[,] board = new GamePiece[gameBoardHeight, gameBoardWidth];
@@ -124,9 +128,56 @@ namespace Flood_Control_Reimplement
             return hasConnected;
         }
         
-        private void AddFadingPiece(int y, int x)
+        public void AddAnimatingPiece(int y, int x, AnimationType animationType)
         {
-            fadingPieces[new Point(x, y)] = new FadingPiece(board[y,x].Type);
+            switch(animationType)
+            {
+                case AnimationType.Rotate:
+                    ++rotatingPiecesCount;
+                    // TODO : Fix actual argument
+                    animatingPieces[new Point(x, y)] = new RotatingPiece();
+                    break;
+                case AnimationType.Fade:
+                    ++fadingPiecesCount;
+                    animatingPieces[new Point(x, y)] = new FadingPiece(board[y,x].Type);
+                    break;
+                case AnimationType.Fall:
+                    ++fallingPiecesCount;
+                    // TODO : Fix actual argument
+                    animatingPieces[new Point(x, y)] = new FallingPiece();
+                    break;
+                    
+            }
+        }
+        
+        public void UpdateAnimatingPieces()
+        {
+            var keysToRemove = new Queue<Point>;
+            bool isFading = (fadingPiecesCount <= 0);
+            
+            foreach(var item in animatingPieces)
+            {
+                // if some pieces are fading, skip updating other animations.
+                if (isFading && !(item.Value is FadingPiece))
+                    continue;
+                
+                item.Value.UpdateAnimation();
+                
+                if (item.Value.IsAnimationOver)
+                {
+                    keysToRemove.Enqueue(item.Key);
+                    
+                    if (item.Value is RotatingPiece)
+                        --rotatingPiecesCount;
+                    else if (item.Value is FadingPiece)
+                        --fadingPiecesCount;
+                    else // item.Value is FallingPiece
+                        --fallingPiecesCount;
+                }
+            }
+            
+            while (keysToRemove.Count > 0)
+                animatingPieces.Remove(keysToRemove.Dequeue());
         }
 
         #endregion

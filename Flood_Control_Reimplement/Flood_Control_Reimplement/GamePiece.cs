@@ -64,5 +64,6 @@ namespace Flood_Control_Reimplement
                 case PieceType.DL: Type = (clockwise) ? PieceType.UL : PieceType.DR; break;
             }
         }
+
     }
 }
